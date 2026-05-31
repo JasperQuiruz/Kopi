@@ -1,5 +1,6 @@
-const CACHE_NAME = 'converter-cache-v5';
+const CACHE_NAME = 'converter-cache-v6';
 const ASSETS = [
+  './',
   'index.html',
   'manifest.json',
   'HD-wallpaper-lucky-clover-beautiful-green-life-love-luck-nature.jpg',

@@ -12,8 +12,8 @@
     <meta name="apple-mobile-web-app-title" content="Coin Converter">
     <meta name="mobile-web-app-capable" content="yes">
     
-    <link rel="apple-touch-icon" sizes="512x512" href="https://img.icons8.com/emoji/512/four-leaf-clover.png">
-    <link rel="icon" type="image/png" sizes="512x512" href="https://img.icons8.com/emoji/512/four-leaf-clover.png">
+    <link rel="apple-touch-icon" sizes="512x512" href="peso.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="peso.png">
 
     <style>
         html, body {
@@ -170,7 +170,7 @@
             color: white;
         }
 
-        /* Label with Icon layout fixed to stay in column flow */
+        /* Fixed container block to prevent horizontal side-stretching */
         .label-with-icon {
             display: flex;
             align-items: center;
@@ -194,6 +194,8 @@
             letter-spacing: 0.5px;
             text-shadow: 0px 1px 1px rgba(255, 255, 255, 0.4);
         }
+        
+        /* Fixed output layout container tag */
         .result { 
             font-size: 42px; 
             font-weight: 900; 
@@ -245,6 +247,7 @@
     </span>
 
     <div class="result-label" id="resLabel">COINS OUT (ROUNDED DOWN)</div>
+    
     <div class="result" id="outputVal">0</div>
     
     <div class="divider"></div>

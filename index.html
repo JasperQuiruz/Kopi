@@ -5,13 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Instant PHP/Coin Converter</title>
     
+    <!-- Link to Progressive Web App Manifest -->
     <link rel="manifest" href="manifest.json">
     
+    <!-- Standalone Mobile App Configurations -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Coin Converter">
     <meta name="mobile-web-app-capable" content="yes">
     
+    <!-- Home Screen App Icon -->
     <link rel="apple-touch-icon" sizes="512x512" href="https://img.icons8.com/emoji/512/four-leaf-clover.png">
     <link rel="icon" type="image/png" sizes="512x512" href="https://img.icons8.com/emoji/512/four-leaf-clover.png">
 
@@ -30,13 +33,12 @@
             justify-content: center; 
             align-items: center; 
             
-            /* Enhanced Full-Screen Fixed Background */
             background-image: url('HD-wallpaper-lucky-clover-beautiful-green-life-love-luck-nature.jpg'); 
             background-size: cover;
             background-position: center center;
             background-repeat: no-repeat;
             background-attachment: fixed;
-            background-color: #1b5e20; /* Fallback deep green */
+            background-color: #1b5e20;
 
             position: fixed;
             left: 0;
@@ -44,7 +46,6 @@
             -webkit-tap-highlight-color: transparent;
         }
         
-        /* Ultra-Transparent Glassmorphism Container */
         .calc-box { 
             background: rgba(255, 255, 255, 0.25); 
             backdrop-filter: blur(16px);
@@ -61,7 +62,6 @@
             box-sizing: border-box;
         }
         
-        /* Mode Button (Top Left) */
         .mode-btn {
             position: absolute;
             top: 15px;
@@ -84,13 +84,10 @@
         .bg-blue { background-color: #1a73e8; }
         .bg-blue:hover { background-color: #1557b0; }
         
-        /* Settings Icon (Top Right) */
         .settings-toggle {
             position: absolute;
             top: 16px;
             right: 22px;
-            width: 22px;
-            height: 22px;
             cursor: pointer;
             user-select: none;
             transition: transform 0.2s ease;
@@ -98,17 +95,15 @@
             align-items: center;
             justify-content: center;
         }
-        .settings-toggle svg {
-            fill: #000000; 
-            stroke: #000000; 
-            stroke-width: 1.5px;
-            filter: drop-shadow(0px 1px 1px rgba(255, 255, 255, 0.5));
+        .settings-toggle img {
+            width: 24px;
+            height: 24px;
+            object-fit: contain;
         }
         .settings-toggle:hover {
             transform: scale(1.15) rotate(30deg);
         }
         
-        /* Floating Modal Overlay */
         .modal-overlay {
             display: none; 
             position: fixed;
@@ -122,7 +117,6 @@
             align-items: center;
         }
         
-        /* Floating Settings Card Box */
         .settings-panel {
             background: white;
             border-radius: 12px;
@@ -133,7 +127,6 @@
             position: relative;
         }
         
-        /* Floating Close Button 'X' */
         .close-btn {
             position: absolute;
             top: 12px;
@@ -143,9 +136,6 @@
             cursor: pointer;
             font-weight: bold;
             user-select: none;
-        }
-        .close-btn:hover {
-            color: #1c1e21;
         }
         
         .settings-panel label {
@@ -167,11 +157,7 @@
             outline: none;
             margin-bottom: 15px;
         }
-        .settings-panel input:focus {
-            border-color: #007aff;
-        }
 
-        /* Save Button */
         .btn-save {
             width: 100%;
             padding: 10px 0;
@@ -185,9 +171,21 @@
             background-color: #2e7d32;
             color: white;
         }
-        .btn-save:hover { background-color: #1b5e20; }
 
-        /* Displays layout */
+        /* Input Icon Container Alignment */
+        .label-with-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+        .label-with-icon img {
+            width: 24px;
+            height: 24px;
+            object-fit: contain;
+        }
+
         .result-label {
             font-size: 11px;
             color: #000000; 
@@ -211,11 +209,10 @@
             background-color: rgba(0, 0, 0, 0.25);
             margin: 20px 0;
         }
+        
         label.input-label { 
-            display: block; 
             font-size: 13px; 
             color: #000000; 
-            margin-bottom: 10px; 
             font-weight: 800;
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -233,11 +230,6 @@
             background: rgba(255, 255, 255, 0.8); 
             color: #000000;
             font-weight: 700;
-            transition: border-color 0.2s, background-color 0.2s;
-        }
-        .main-input:focus {
-            border-color: #007aff;
-            background: rgba(255, 255, 255, 0.98);
         }
     </style>
 </head>
@@ -248,18 +240,22 @@
         PESO TO COIN
     </button>
     
+    <!-- Link to your new settings.png asset -->
     <span class="settings-toggle" onclick="openSettings()">
-        <svg viewBox="0 0 24 24" width="22" height="22" xmlns="http://www.w3.org/2000/svg">
-            <path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73(1.69-.98l.38-2.65c.03-.24.24-.42.49-.42h4c.25 0 .46.18.49.42l.38 2.65c.61.25 1.17.59 1.69.98l2.49 1c.23.09.49 0 .61.22l2 3.46c.12.22.07.49-.12.64l-2.11-1.65zM12 15.5c-1.93 0-3-1.57-3-3.5s1.07-3.5 3-3.5 3 1.57 3 3.5-1.07 3.5-3 3.5z"/>
-        </svg>
+        <img src="settings.png" alt="Settings">
     </span>
 
     <div class="result-label" id="resLabel">COINS OUT (ROUNDED DOWN)</div>
-    <div class="result" id="outputVal">0</div>
+    .result" id="outputVal">0</div>
     
     <div class="divider"></div>
     
-    <label for="inputVal" class="input-label" id="inpLabel">Enter Pesos (PHP)</label>
+    <!-- Label with dynamic local image routing -->
+    <div class="label-with-icon">
+        <img id="labelIcon" src="peso.png" alt="Icon">
+        <label for="inputVal" class="input-label" id="inpLabel">Enter Pesos (PHP)</label>
+    </div>
+    
     <input type="number" id="inputVal" class="main-input" placeholder="0" oninput="calculate()" autofocus>
 </div>
 
@@ -288,7 +284,6 @@ function closeSettings() {
 
 function saveSettings() {
     let inputDivisor = parseFloat(document.getElementById('divisorVal').value);
-    
     if (!isNaN(inputDivisor) && inputDivisor !== 0) {
         activeDivisor = inputDivisor;
         calculate();
@@ -305,17 +300,20 @@ function toggleMode() {
     let resLabel = document.getElementById('resLabel');
     let inpLabel = document.getElementById('inpLabel');
     let inputVal = document.getElementById('inputVal');
+    let labelIcon = document.getElementById('labelIcon');
     
     if (isPesoToCoin) {
         modeBtn.className = "mode-btn bg-green";
         modeBtn.innerText = "PESO TO COIN";
         resLabel.innerText = "COINS OUT (ROUNDED DOWN)";
         inpLabel.innerText = "Enter Pesos (PHP)";
+        labelIcon.src = "peso.png"; 
     } else {
         modeBtn.className = "mode-btn bg-blue";
         modeBtn.innerText = "COIN TO PESO";
         resLabel.innerText = "PESOS OUT (ROUNDED UP)";
         inpLabel.innerText = "Enter Coins";
+        labelIcon.src = "dollar.png"; 
     }
     
     inputVal.value = "";
@@ -345,7 +343,6 @@ function calculate() {
     output.innerText = finalResult.toLocaleString();
 }
 
-// Register Service Worker for Offline Capabilities
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('sw.js')

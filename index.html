@@ -54,19 +54,39 @@
             width: 320px;
             max-width: 90%;
             position: relative; 
-            padding-top: 65px; 
+            padding-top: 82px; /* MODIFIED: Cut slightly for perfect top badge breathing room */
             border: 1px solid rgba(255, 255, 255, 0.3);
             user-select: none;
             box-sizing: border-box;
         }
         
-        .mode-btn {
+        .rating-display {
             position: absolute;
             top: 15px;
-            left: 20px;
-            padding: 6px 14px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 14px; 
+            font-weight: 900; 
+            color: #000000;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            text-shadow: 0px 1px 1px rgba(255, 255, 255, 0.5);
+            background: rgba(255, 255, 255, 0.35); 
+            padding: 6px 14px; 
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            white-space: nowrap;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            z-index: 4;
+        }
+
+        .mode-btn {
+            position: absolute;
+            top: 17px;
+            left: 15px;
+            padding: 6px 12px;
             border-radius: 6px;
-            font-size: 11px;
+            font-size: 10px;
             font-weight: bold;
             cursor: pointer;
             user-select: none;
@@ -75,6 +95,7 @@
             text-transform: uppercase;
             letter-spacing: 0.3px;
             transition: background-color 0.2s ease;
+            z-index: 5;
         }
         
         .bg-green { background-color: #2e7d32; }
@@ -84,18 +105,19 @@
         
         .settings-toggle {
             position: absolute;
-            top: 16px;
-            right: 22px;
+            top: 18px;
+            right: 18px;
             cursor: pointer;
             user-select: none;
             transition: transform 0.2s ease;
             display: flex;
             align-items: center;
             justify-content: center;
+            z-index: 5;
         }
         .settings-toggle img {
-            width: 24px;
-            height: 24px;
+            width: 22px;
+            height: 22px;
             object-fit: contain;
         }
         .settings-toggle:hover {
@@ -170,6 +192,21 @@
             color: white;
         }
 
+        /* ADDED: Layout wrapper to gracefully hold output icon and label text together */
+        .output-label-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            margin-bottom: 6px;
+            width: 100%;
+        }
+        .output-label-container img {
+            width: 18px;
+            height: 18px;
+            object-fit: contain;
+        }
+
         .label-with-icon {
             display: flex;
             align-items: center;
@@ -185,24 +222,23 @@
         }
 
         .result-label {
-            font-size: 11px;
+            font-size: 13px; 
             color: #000000; 
-            margin-bottom: 5px;
+            margin: 0; /* Handled gracefully by container spacing now */
             font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.8px;
             text-shadow: 0px 1px 1px rgba(255, 255, 255, 0.4);
         }
         
         .result { 
-            font-size: 42px; 
+            font-size: 44px; 
             font-weight: 900; 
             color: #000000; 
-            min-height: 52px; 
-            line-height: 52px;
-            margin-bottom: 5px;
+            margin-bottom: 6px;
             text-shadow: 0px 1px 3px rgba(255, 255, 255, 0.8);
         }
+        
         .divider {
             height: 1px;
             background-color: rgba(0, 0, 0, 0.25);
@@ -210,7 +246,7 @@
         }
         
         label.input-label { 
-            font-size: 13px; 
+            font-size: 14px; 
             color: #000000; 
             font-weight: 800;
             text-transform: uppercase;
@@ -237,14 +273,19 @@
 
 <div class="calc-box">
     <button class="mode-btn bg-green" id="modeBtn" onclick="toggleMode()">
-        PESO TO COIN
+        P TO C
     </button>
+    
+    <div class="rating-display" id="rateDisplay">Rate: Not Set</div>
     
     <span class="settings-toggle" onclick="openSettings()">
         <img src="settings.png" alt="Settings">
     </span>
 
-    <div class="result-label" id="resLabel">COINS OUT (ROUNDED DOWN)</div>
+    <div class="output-label-container">
+        <img id="resIcon" src="dollar.png" alt="Icon">
+        <div class="result-label" id="resLabel">COINS OUT</div>
+    </div>
     <div class="result" id="outputVal">0</div>
     
     <div class="divider"></div>
@@ -269,8 +310,18 @@
 
 <script>
 let isPesoToCoin = true;
-// Dynamic check for existing local memory profile configuration setups
 let activeDivisor = localStorage.getItem('savedDivisor') ? parseFloat(localStorage.getItem('savedDivisor')) : 62.6;
+
+updateRateDisplay();
+
+function updateRateDisplay() {
+    let display = document.getElementById('rateDisplay');
+    if (activeDivisor !== null && !isNaN(activeDivisor)) {
+        display.innerText = "Rate: " + activeDivisor.toLocaleString('en-US');
+    } else {
+        display.innerText = "Rate: Not Set";
+    }
+}
 
 function openSettings() {
     document.getElementById('divisorVal').value = activeDivisor;
@@ -285,8 +336,8 @@ function saveSettings() {
     let inputDivisor = parseFloat(document.getElementById('divisorVal').value);
     if (!isNaN(inputDivisor) && inputDivisor !== 0) {
         activeDivisor = inputDivisor;
-        // Commits configuration setups securely inside client-device memory permanently
         localStorage.setItem('savedDivisor', activeDivisor);
+        updateRateDisplay(); 
         calculate();
         closeSettings();
     } else {
@@ -299,20 +350,23 @@ function toggleMode() {
     
     let modeBtn = document.getElementById('modeBtn');
     let resLabel = document.getElementById('resLabel');
+    let resIcon = document.getElementById('resIcon');
     let inpLabel = document.getElementById('inpLabel');
     let inputVal = document.getElementById('inputVal');
     let labelIcon = document.getElementById('labelIcon');
     
     if (isPesoToCoin) {
         modeBtn.className = "mode-btn bg-green";
-        modeBtn.innerText = "PESO TO COIN";
-        resLabel.innerText = "COINS OUT (ROUNDED DOWN)";
+        modeBtn.innerText = "P TO C";
+        resLabel.innerText = "COINS OUT"; 
+        resIcon.src = "dollar.png"; // Dynamic currency icon swaps for output labels
         inpLabel.innerText = "Enter Pesos (PHP)";
         labelIcon.src = "peso.png"; 
     } else {
         modeBtn.className = "mode-btn bg-blue";
-        modeBtn.innerText = "COIN TO PESO";
-        resLabel.innerText = "PESOS OUT (ROUNDED UP)";
+        modeBtn.innerText = "C TO P";
+        resLabel.innerText = "PESOS OUT"; 
+        resIcon.src = "peso.png"; // Dynamic currency icon swaps for output labels
         inpLabel.innerText = "Enter Coins";
         labelIcon.src = "dollar.png"; 
     }
@@ -325,7 +379,6 @@ function formatAndCalculate(input) {
     let cursorPosition = input.selectionStart;
     let originalLength = input.value.length;
 
-    // Filter structural properties to drop anything besides clean numerical configurations
     let cleanValue = input.value.replace(/[^0-9]/g, '');
     
     if (cleanValue === '') {
@@ -334,11 +387,9 @@ function formatAndCalculate(input) {
         return;
     }
 
-    // Insert formatting separators dynamically across input targets
     let formattedValue = parseInt(cleanValue, 10).toLocaleString('en-US');
     input.value = formattedValue;
 
-    // Stabilize phone tracking text caret anchors smoothly
     let newLength = formattedValue.length;
     input.setSelectionRange(cursorPosition + (newLength - originalLength), cursorPosition + (newLength - originalLength));
 
@@ -359,10 +410,10 @@ function calculate() {
     let finalResult = 0;
     
     if (isPesoToCoin) {
-        rawResult = (x / activeDivisor) * 10000;
+        rawResult = (x / activeDivisor) * 1000000;
         finalResult = Math.floor(rawResult / 100) * 100;
     } else {
-        rawResult = (x / 10000) * activeDivisor;
+        rawResult = (x / 1000000) * activeDivisor;
         finalResult = Math.ceil(rawResult);
     }
     

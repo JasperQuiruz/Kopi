@@ -5,16 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Instant PHP/Coin Converter</title>
     
-    <!-- Link to Progressive Web App Manifest -->
     <link rel="manifest" href="manifest.json">
     
-    <!-- Standalone Mobile App Configurations -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Coin Converter">
     <meta name="mobile-web-app-capable" content="yes">
     
-    <!-- Home Screen App Icon -->
     <link rel="apple-touch-icon" sizes="512x512" href="https://img.icons8.com/emoji/512/four-leaf-clover.png">
     <link rel="icon" type="image/png" sizes="512x512" href="https://img.icons8.com/emoji/512/four-leaf-clover.png">
 
@@ -50,11 +47,12 @@
             background: rgba(255, 255, 255, 0.25); 
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-            padding: 35px; 
+            padding: 30px; 
             border-radius: 16px; 
             box-shadow: 0 15px 35px rgba(0,0,0,0.35); 
             text-align: center; 
             width: 320px;
+            max-width: 90%;
             position: relative; 
             padding-top: 65px; 
             border: 1px solid rgba(255, 255, 255, 0.3);
@@ -172,13 +170,14 @@
             color: white;
         }
 
-        /* Input Icon Container Alignment */
+        /* Label with Icon layout fixed to stay in column flow */
         .label-with-icon {
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
+            width: 100%;
         }
         .label-with-icon img {
             width: 24px;
@@ -217,6 +216,7 @@
             text-transform: uppercase;
             letter-spacing: 0.5px;
             text-shadow: 0px 1px 1px rgba(255, 255, 255, 0.4);
+            margin: 0;
         }
         .main-input { 
             font-size: 28px; 
@@ -240,17 +240,15 @@
         PESO TO COIN
     </button>
     
-    <!-- Link to your new settings.png asset -->
     <span class="settings-toggle" onclick="openSettings()">
         <img src="settings.png" alt="Settings">
     </span>
 
     <div class="result-label" id="resLabel">COINS OUT (ROUNDED DOWN)</div>
-    .result" id="outputVal">0</div>
+    <div class="result" id="outputVal">0</div>
     
     <div class="divider"></div>
     
-    <!-- Label with dynamic local image routing -->
     <div class="label-with-icon">
         <img id="labelIcon" src="peso.png" alt="Icon">
         <label for="inputVal" class="input-label" id="inpLabel">Enter Pesos (PHP)</label>

@@ -170,7 +170,6 @@
             color: white;
         }
 
-        /* Fixed container block to prevent horizontal side-stretching */
         .label-with-icon {
             display: flex;
             align-items: center;
@@ -195,7 +194,6 @@
             text-shadow: 0px 1px 1px rgba(255, 255, 255, 0.4);
         }
         
-        /* Fixed output layout container tag */
         .result { 
             font-size: 42px; 
             font-weight: 900; 
@@ -247,7 +245,6 @@
     </span>
 
     <div class="result-label" id="resLabel">COINS OUT (ROUNDED DOWN)</div>
-    
     <div class="result" id="outputVal">0</div>
     
     <div class="divider"></div>
@@ -257,7 +254,7 @@
         <label for="inputVal" class="input-label" id="inpLabel">Enter Pesos (PHP)</label>
     </div>
     
-    <input type="number" id="inputVal" class="main-input" placeholder="0" oninput="calculate()" autofocus>
+    <input type="text" inputmode="numeric" id="inputVal" class="main-input" placeholder="0" oninput="formatAndCalculate(this)" autofocus>
 </div>
 
 <div class="modal-overlay" id="modalOverlay">
@@ -321,8 +318,36 @@ function toggleMode() {
     calculate();
 }
 
+// Automatically processes the typed values to apply commas dynamically
+function formatAndCalculate(input) {
+    // Save current typing cursor position
+    let cursorPosition = input.selectionStart;
+    let originalLength = input.value.length;
+
+    // Remove anything that isn't a digit
+    let cleanValue = input.value.replace(/[^0-9]/g, '');
+    
+    if (cleanValue === '') {
+        input.value = '';
+        calculate();
+        return;
+    }
+
+    // Convert to a formal number string with comma separators
+    let formattedValue = parseInt(cleanValue, 10).toLocaleString('en-US');
+    input.value = formattedValue;
+
+    // Readjust the typing cursor so it doesn't jump around on mobile
+    let newLength = formattedValue.length;
+    input.setSelectionRange(cursorPosition + (newLength - originalLength), cursorPosition + (newLength - originalLength));
+
+    calculate();
+}
+
 function calculate() {
-    let x = parseFloat(document.getElementById('inputVal').value);
+    // Get input value and strip existing commas before calculating math
+    let rawInputString = document.getElementById('inputVal').value.replace(/,/g, '');
+    let x = parseFloat(rawInputString);
     let output = document.getElementById('outputVal');
     
     if (isNaN(x) || isNaN(activeDivisor) || activeDivisor === 0 || x <= 0) {

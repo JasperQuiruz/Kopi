@@ -269,7 +269,8 @@
 
 <script>
 let isPesoToCoin = true;
-let activeDivisor = 62.6;
+// Dynamic check for existing local memory profile configuration setups
+let activeDivisor = localStorage.getItem('savedDivisor') ? parseFloat(localStorage.getItem('savedDivisor')) : 62.6;
 
 function openSettings() {
     document.getElementById('divisorVal').value = activeDivisor;
@@ -284,6 +285,8 @@ function saveSettings() {
     let inputDivisor = parseFloat(document.getElementById('divisorVal').value);
     if (!isNaN(inputDivisor) && inputDivisor !== 0) {
         activeDivisor = inputDivisor;
+        // Commits configuration setups securely inside client-device memory permanently
+        localStorage.setItem('savedDivisor', activeDivisor);
         calculate();
         closeSettings();
     } else {
@@ -318,13 +321,11 @@ function toggleMode() {
     calculate();
 }
 
-// Automatically processes the typed values to apply commas dynamically
 function formatAndCalculate(input) {
-    // Save current typing cursor position
     let cursorPosition = input.selectionStart;
     let originalLength = input.value.length;
 
-    // Remove anything that isn't a digit
+    // Filter structural properties to drop anything besides clean numerical configurations
     let cleanValue = input.value.replace(/[^0-9]/g, '');
     
     if (cleanValue === '') {
@@ -333,11 +334,11 @@ function formatAndCalculate(input) {
         return;
     }
 
-    // Convert to a formal number string with comma separators
+    // Insert formatting separators dynamically across input targets
     let formattedValue = parseInt(cleanValue, 10).toLocaleString('en-US');
     input.value = formattedValue;
 
-    // Readjust the typing cursor so it doesn't jump around on mobile
+    // Stabilize phone tracking text caret anchors smoothly
     let newLength = formattedValue.length;
     input.setSelectionRange(cursorPosition + (newLength - originalLength), cursorPosition + (newLength - originalLength));
 
@@ -345,7 +346,6 @@ function formatAndCalculate(input) {
 }
 
 function calculate() {
-    // Get input value and strip existing commas before calculating math
     let rawInputString = document.getElementById('inputVal').value.replace(/,/g, '');
     let x = parseFloat(rawInputString);
     let output = document.getElementById('outputVal');

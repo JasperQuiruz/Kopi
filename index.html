@@ -2,8 +2,19 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Instant PHP/Coin Converter</title>
+    
+    <!-- Established Standalone Mobile App Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Coin Converter">
+    <meta name="mobile-web-app-capable" content="yes">
+    
+    <!-- Home Screen App Icon Configuration -->
+    <link rel="apple-touch-icon" sizes="512x512" href="https://img.icons8.com/emoji/512/four-leaf-clover.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="https://img.icons8.com/emoji/512/four-leaf-clover.png">
+
     <style>
         body { 
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
@@ -19,6 +30,12 @@
             background-position: center;
             background-repeat: no-repeat;
             background-color: #1b5e20; /* Fallback deep green */
+
+            /* Native app scroll configurations */
+            overflow: hidden;
+            position: fixed;
+            width: 100%;
+            -webkit-tap-highlight-color: transparent;
         }
         
         /* Ultra-Transparent Glassmorphism Container */
@@ -34,6 +51,7 @@
             position: relative; 
             padding-top: 65px; 
             border: 1px solid rgba(255, 255, 255, 0.3);
+            user-select: none;
         }
         
         /* Mode Button (Top Left) */
@@ -75,8 +93,8 @@
             justify-content: center;
         }
         .settings-toggle svg {
-            fill: #000000; /* Pure Black fill */
-            stroke: #000000; /* Extra bold weighting outline */
+            fill: #000000; 
+            stroke: #000000; 
             stroke-width: 1.5px;
             filter: drop-shadow(0px 1px 1px rgba(255, 255, 255, 0.5));
         }
@@ -221,7 +239,7 @@
 
 <div class="calc-box">
     <button class="mode-btn bg-green" id="modeBtn" onclick="toggleMode()">
-        ðŸª™ PESO TO (â‚±) COIN
+        PESO TO COIN
     </button>
     
     <span class="settings-toggle" onclick="openSettings()">
@@ -231,17 +249,17 @@
     </span>
 
     <div class="result-label" id="resLabel">COINS OUT (ROUNDED DOWN)</div>
-    <div class="result" id="outputVal">â€”</div>
+    <div class="result" id="outputVal">0</div>
     
     <div class="divider"></div>
     
-    <label for="inputVal" class="input-label" id="inpLabel">Enter Pesos (â‚±)</label>
+    <label for="inputVal" class="input-label" id="inpLabel">Enter Pesos (PHP)</label>
     <input type="number" id="inputVal" class="main-input" placeholder="0" oninput="calculate()" autofocus>
 </div>
 
 <div class="modal-overlay" id="modalOverlay">
     <div class="settings-panel">
-        <span class="close-btn" onclick="closeSettings()">âœ•</span>
+        <span class="close-btn" onclick="closeSettings()">✕</span>
         <label for="divisorVal">Modify Divisor Rule:</label>
         <input type="number" id="divisorVal" value="62.6" step="0.1">
         
@@ -284,14 +302,14 @@ function toggleMode() {
     
     if (isPesoToCoin) {
         modeBtn.className = "mode-btn bg-green";
-        modeBtn.innerText = "(â‚±) PESO TO ðŸª™ COIN";
+        modeBtn.innerText = "PESO TO COIN";
         resLabel.innerText = "COINS OUT (ROUNDED DOWN)";
-        inpLabel.innerText = "Enter Pesos (â‚±)";
+        inpLabel.innerText = "Enter Pesos (PHP)";
     } else {
         modeBtn.className = "mode-btn bg-blue";
-        modeBtn.innerText = "ðŸª™ COIN TO (â‚±) PESO";
+        modeBtn.innerText = "COIN TO PESO";
         resLabel.innerText = "PESOS OUT (ROUNDED UP)";
-        inpLabel.innerText = "Enter Coins (ðŸª™)";
+        inpLabel.innerText = "Enter Coins";
     }
     
     inputVal.value = "";
@@ -303,7 +321,7 @@ function calculate() {
     let output = document.getElementById('outputVal');
     
     if (isNaN(x) || isNaN(activeDivisor) || activeDivisor === 0 || x <= 0) {
-        output.innerText = "â€”";
+        output.innerText = "0";
         return;
     }
     

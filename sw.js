@@ -1,7 +1,8 @@
-const CACHE_NAME = 'converter-cache-v6';
+const CACHE_NAME = 'converter-cache-v7';
 const ASSETS = [
   './',
   'index.html',
+  "https://img.icons8.com/emoji/512/four-leaf-clover.png",
   'manifest.json',
   'HD-wallpaper-lucky-clover-beautiful-green-life-love-luck-nature.jpg',
   'settings.png',

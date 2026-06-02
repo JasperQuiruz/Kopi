@@ -54,7 +54,7 @@
             width: 320px;
             max-width: 90%;
             position: relative; 
-            padding-top: 82px; /* MODIFIED: Cut slightly for perfect top badge breathing room */
+            padding-top: 82px; 
             border: 1px solid rgba(255, 255, 255, 0.3);
             user-select: none;
             box-sizing: border-box;
@@ -192,7 +192,6 @@
             color: white;
         }
 
-        /* ADDED: Layout wrapper to gracefully hold output icon and label text together */
         .output-label-container {
             display: flex;
             align-items: center;
@@ -224,7 +223,7 @@
         .result-label {
             font-size: 13px; 
             color: #000000; 
-            margin: 0; /* Handled gracefully by container spacing now */
+            margin: 0; 
             font-weight: 800;
             text-transform: uppercase;
             letter-spacing: 0.8px;
@@ -359,14 +358,14 @@ function toggleMode() {
         modeBtn.className = "mode-btn bg-green";
         modeBtn.innerText = "P TO C";
         resLabel.innerText = "COINS OUT"; 
-        resIcon.src = "dollar.png"; // Dynamic currency icon swaps for output labels
+        resIcon.src = "dollar.png"; 
         inpLabel.innerText = "Enter Pesos (PHP)";
         labelIcon.src = "peso.png"; 
     } else {
         modeBtn.className = "mode-btn bg-blue";
         modeBtn.innerText = "C TO P";
         resLabel.innerText = "PESOS OUT"; 
-        resIcon.src = "peso.png"; // Dynamic currency icon swaps for output labels
+        resIcon.src = "peso.png"; 
         inpLabel.innerText = "Enter Coins";
         labelIcon.src = "dollar.png"; 
     }
@@ -406,15 +405,28 @@ function calculate() {
         return;
     }
     
-    let rawResult = 0;
     let finalResult = 0;
     
     if (isPesoToCoin) {
-        rawResult = (x / activeDivisor) * 1000000;
+        // (Peso / divisor) * 1,000,000
+        let rawResult = (x / activeDivisor) * 1000000;
+        
+        // Always round down last 3 digits (e.g., 56,261 becomes 56,200)
         finalResult = Math.floor(rawResult / 100) * 100;
     } else {
-        rawResult = (x / 1000000) * activeDivisor;
-        finalResult = Math.ceil(rawResult);
+        // (Coins / 1,000,000) * divisor
+        let rawResult = (x / 1000000) * activeDivisor;
+        
+        // Isolate the decimal part
+        let baseInteger = Math.floor(rawResult);
+        let decimalPart = rawResult - baseInteger;
+        
+        // Custom Rule: Only round up if decimal part is strictly .10 or higher (.09999... or below rounds down)
+        if (decimalPart >= 0.10) {
+            finalResult = Math.ceil(rawResult);
+        } else {
+            finalResult = Math.floor(rawResult);
+        }
     }
     
     output.innerText = finalResult.toLocaleString();

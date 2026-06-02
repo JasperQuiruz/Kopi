@@ -408,21 +408,22 @@ function calculate() {
     let finalResult = 0;
     
     if (isPesoToCoin) {
-        // (Peso / divisor) * 1,000,000
+        // P TO C: (Peso / divisor) * 1,000,000
         let rawResult = (x / activeDivisor) * 1000000;
         
         // Always round down last 3 digits (e.g., 56,261 becomes 56,200)
         finalResult = Math.floor(rawResult / 100) * 100;
     } else {
-        // (Coins / 1,000,000) * divisor
+        // C TO P: Always divides by 1,000,000 baseline
         let rawResult = (x / 1000000) * activeDivisor;
         
-        // Isolate the decimal part
-        let baseInteger = Math.floor(rawResult);
-        let decimalPart = rawResult - baseInteger;
+        // Extract the exact numerical value of the tenths place (1st decimal)
+        // Adding a micro-adjustment protects against standard floating point inaccuracies
+        let firstDecimalDigit = Math.floor((rawResult + 0.00001) * 10) % 10;
         
-        // Custom Rule: Only round up if decimal part is strictly .10 or higher (.09999... or below rounds down)
-        if (decimalPart >= 0.10) {
+        // Rule: If 1st decimal is .1 or higher, automatically round UP. 
+        // If it's .09 or below (meaning tenths place is 0), automatically drop the decimals.
+        if (firstDecimalDigit >= 1) {
             finalResult = Math.ceil(rawResult);
         } else {
             finalResult = Math.floor(rawResult);
@@ -442,4 +443,4 @@ if ('serviceWorker' in navigator) {
 </script>
 
 </body>
-    </html>
+</html>
